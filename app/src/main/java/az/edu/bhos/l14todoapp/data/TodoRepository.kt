@@ -1,8 +1,3 @@
-package az.edu.bhos.l14todoapp.data
-
-import az.edu.bhos.l14todoapp.entities.TodoEntity
-import kotlinx.coroutines.flow.Flow
-
 interface TodoRepository {
     suspend fun syncTodos()
     fun observeTodoEntries(): Flow<List<TodoEntity>>
@@ -16,7 +11,10 @@ class TodoRepositoryImpl(
 
     override suspend fun syncTodos() {
         val todoList = remoteData.getTodos()
-        // TODO save to local
+        // TODO save to local data
+        todoList.forEach {
+            localData.save(TodoEntity(it.id, it.title, it.completed, it.weekday))
+        }
     }
 
     override fun observeTodoEntries(): Flow<List<TodoEntity>> {
